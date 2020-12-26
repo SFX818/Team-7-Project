@@ -1,3 +1,5 @@
+const User = require("../models/user.model")
+
 exports.allAccess = (req, res)=>{
     res.status(200).send("public content")
 }
@@ -8,4 +10,12 @@ exports.userBoard = (req, res) => {
 
 exports.adminBoard = (req, res) => {
     res.status(200).send("Admin content")
+}
+
+exports.userProfile = (req, res) => {
+    const id= req.body._id
+    User.find({_id: id}).then((user)=>{
+        if(!user)
+        return res.status(400).send({message: })
+    })
 }
