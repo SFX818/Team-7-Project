@@ -8,7 +8,7 @@ exports.makePost = (req, res) => {
     console.log(req.body)
     //creating post object
     const post = new Post({
-        creator: req.body.creator, 
+        // creator: req.body.creator, 
         body: req.body.body,
         favorites: 0,
         favoritedBy: [],
