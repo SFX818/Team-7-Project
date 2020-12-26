@@ -8,7 +8,8 @@ exports.makePost = (req, res) => {
     console.log(req.body)
     //creating post object
     const post = new Post({
-        creator: req.body.creator, 
+
+        // creator: req.body.creator, 
         body: req.body.body,
         favorites: 0,
         favoritedBy: [],
@@ -68,8 +69,10 @@ exports.deletePost = (req,res) => {
         if(!data)
         return res.status(400).send({message: "Unable to delete post"})
         else res.send(data)
+
     })
 }
+
 
 exports.userFollowing = (req, res) => {
     
@@ -105,3 +108,30 @@ exports.userFollowing = (req, res) => {
     )
     
 }
+
+//route to display all posts "/api/posts/feed" 
+exports.allPosts = (req, res) => {
+    Post.find()
+    .then((data)=> {
+        res.send(data)
+    })
+    .catch((err) => {
+        res.status(500).send({
+            message: err || "Some error occured while retreiving tutorials"
+        })
+    })
+}
+
+//route to display one post only "/api/posts/:id"
+exports.onePost = (req, res) => {
+    const id = req.params.idx
+    console.log(id)
+    Post.find({_id: id})
+    .then((post)=>{
+        if(!post)
+        return res.status(400).send({message: "Cannot find this post"})
+        else res.send(post)
+    })
+}
+
+

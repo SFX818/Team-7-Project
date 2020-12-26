@@ -17,8 +17,10 @@ module.exports = function(app) {
     app.get("/api/test/user", [authJwt.verifyWebToken], controller.userBoard)
 
     app.get("/api/test/admin", [authJwt.verifyWebToken, authJwt.isAdmin], controller.adminBoard)
+    //User profile to display
+    app.get("/api/user/profile", controller.userProfile)
     //Follow a user - add route to user so it shows that they are following another
-    // app.post("/api/user/follow", controller.follow)
+    app.put("/api/user/follow", controller.follow)
     //Unfollow a user
-    // app.put("/api/user/unfollow", controller.unFollow)
+    app.put("/api/user/unfollow", controller.unfollow)
 }
