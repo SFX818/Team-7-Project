@@ -26,8 +26,8 @@ app.delete("/api/posts/post", controller.deletePost)
 // app.post("/api/posts/retweet", controller.retweetPost)
 // //Reply to post
 // app.post("/api/posts/reply", controller.replyToPost)
-// //View all posts from users as user is following
-// app.get("/api/posts/feed/follow", controller.userFollowing)
+// View all posts from users as user is following
+app.get("/api/posts/feed/follow", controller.userFollowing)
 
 
 }

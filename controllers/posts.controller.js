@@ -70,3 +70,29 @@ exports.deletePost = (req,res) => {
         else res.send(data)
     })
 }
+
+exports.userFollowing = (req, res) => {
+    
+    let userFollowingArray
+    
+    User.findById(req.body.creator, (err, user) => {
+        if (err) {
+            res.status(500).send({ message: err })
+            return
+        }
+
+        userFollowingArray = user.followed
+        console.log(user)
+        console.log('USER FOLLOWING ARRAY -->', userFollowingArray)
+    })
+    
+    if(userFollowingArray.length > 0) {
+        userFollowingArray.forEach(follower => 
+        Post.findAll({
+            creator: { $eq: follower }
+        })
+        )
+    } else {
+        res.send({ message: 'You are not following anyone' })
+    }
+}
