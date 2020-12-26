@@ -73,7 +73,7 @@ exports.deletePost = (req,res) => {
 
 exports.userFollowing = (req, res) => {
     
-    let userFollowingArray
+    let userFollowingArray = []
     
     User.findById(req.body.creator, (err, user) => {
         if (err) {
@@ -84,15 +84,24 @@ exports.userFollowing = (req, res) => {
         userFollowingArray = user.followed
         console.log(user)
         console.log('USER FOLLOWING ARRAY -->', userFollowingArray)
-    })
+        console.log('USER FOLLOWING ARRAY LENGTH -->', userFollowingArray.length)
+    
+    }).then(() => {
+    
     
     if(userFollowingArray.length > 0) {
         userFollowingArray.forEach(follower => 
-        Post.findAll({
+        Post.find({
             creator: { $eq: follower }
         })
         )
+        res.send({message: 'Posts retrieved'})
+        //console.log(res)
     } else {
+        console.log('USER FOLLOWING ARRAY LENGTH -->', userFollowingArray.length)
         res.send({ message: 'You are not following anyone' })
     }
+    }
+    )
+    
 }
