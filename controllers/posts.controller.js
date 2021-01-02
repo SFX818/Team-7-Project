@@ -208,11 +208,11 @@ exports.favoritesFeed = (req, res) => {
     })
 }
 // make a reply
-exports.replyToPosts = (req, res) => {
+exports.replyToPost = (req, res) => {
     // res.send ({ message: "Reply has been Posted"})
     console.log(req.body)
     //creating a reply object (make sure isReply is set to true)
-    const reply = new Reply ({
+    const reply = new Post ({
         //creator: req.body.user,
         body: req.body.body,
         favortes: 0,
@@ -227,39 +227,51 @@ exports.replyToPosts = (req, res) => {
     })
 
     // Find the user and add user as creator to the reply
-        User.findbyId (req.body.creator, (err, user) => {
+        User.findById (req.body.creator, (err, user) => {
+            console.log('user', user)
+            user.posts.push(reply._id)
+        
             if (err) {
                 res.status(500).send({message: err})
                 return
             }
-            user.posts.push(post._id)
         })
            
+        // reply.save((err) => {
+        //     if (err) {
+        //         res.status(500).send({message: err})
+        //     }
+        //     res.send("Reply Created Sucessfully!")
+        // })
+        
+        // trying to find the parentPost (id) to attach to the reply
+        Post.findById (req.body.parentPost, (err, post) => {
+            if (err) {
+                res.status(500).send({message: err})
+                return
+            }
+            post.replies.push(reply._id) 
+        })
+
         reply.save((err) => {
             if (err) {
                 res.status(500).send({message: err})
             }
             res.send("Reply Created Sucessfully!")
         })
-        // trying to find the parentPost (id) to attach to the reply
-        Post.findById (req.body.parentPost, (err, user) => {
-            if (err) {
-                res.status(500).send({message: err})
-                return
-            }
-            user.posts.push(post._id) 
-        })
 
-        reply.save((err) => {
-            if (err) {
-                res.status(500).send({message: err})
-            }
-            res.send("Reply Created")
-        })
+        // reply.save((err) => {
+        //     if (err) {
+        //         res.status(500).send({message: err})
+        //     }
+        //     // res.send("Reply Created")
+        // })
 
-        user.save((err) => {
-            if (err) {
-                res.status(500).send({message: err})
-            }
-            console.log("Your reply was posted to the Post!")
-        })
+        // user.save((err) => {
+        //     if (err) {
+        //         res.status(500).send({message: err})
+        //     }
+        //     console.log("Your reply was posted to the Post!")
+        // })
+    
+    }
