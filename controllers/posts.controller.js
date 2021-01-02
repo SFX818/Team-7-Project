@@ -207,3 +207,59 @@ exports.favoritesFeed = (req, res) => {
         res.send(posts)
     })
 }
+// make a reply
+exports.replyToPosts = (req, res) => {
+    // res.send ({ message: "Reply has been Posted"})
+    console.log(req.body)
+    //creating a reply object (make sure isReply is set to true)
+    const reply = new Reply ({
+        //creator: req.body.user,
+        body: req.body.body,
+        favortes: 0,
+        favoritedBy: [],
+        reposts: 0,
+        repostedBy: [],
+        replies: [],
+        hastags: req.body.hashtags,
+        isRepost: false,
+        isReply: true,
+        parentPost: req.body.parentPost
+    })
+
+    // Find the user and add user as creator to the reply
+        User.findbyId (req.body.creator, (err, user) => {
+            if (err) {
+                res.status(500).send({message: err})
+                return
+            }
+            user.posts.push(post._id)
+        })
+           
+        reply.save((err) => {
+            if (err) {
+                res.status(500).send({message: err})
+            }
+            res.send("Reply Created Sucessfully!")
+        })
+        // trying to find the parentPost (id) to attach to the reply
+        Post.findById (req.body.parentPost, (err, user) => {
+            if (err) {
+                res.status(500).send({message: err})
+                return
+            }
+            user.posts.push(post._id) 
+        })
+
+        reply.save((err) => {
+            if (err) {
+                res.status(500).send({message: err})
+            }
+            res.send("Reply Created")
+        })
+
+        user.save((err) => {
+            if (err) {
+                res.status(500).send({message: err})
+            }
+            console.log("Your reply was posted to the Post!")
+        })
