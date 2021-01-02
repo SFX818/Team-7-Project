@@ -82,7 +82,6 @@ exports.userFollowing = (req, res) => {
     }).
     exec((error, posts) => {
         if (error) {
-            console.log("eer",error)
             res.status(500).send({ message: error })
             return
         }
