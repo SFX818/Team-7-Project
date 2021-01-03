@@ -225,8 +225,13 @@ exports.incrementFavorite = (req, res) => {
 exports.favoritesFeed = (req, res) => {
     //grab id from req.params
     User.findById(req.params.id).
-    populate('favoritePosts').
-    populate('posts').
+    populate( {
+        path: 'favoritePosts',
+        populate: {
+            path: 'creator',
+            model: 'User'
+        }
+    }).
     exec((error, posts) => {
         if (error) {
             res.status(500).send({ message: error })
