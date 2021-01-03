@@ -1,4 +1,5 @@
 const db = require('../models/index')
+const { populate } = require('../models/user.model')
 //Access to our db thorugh User and Role variable
 const User = db.user
 const Post = db.post
@@ -94,7 +95,11 @@ exports.userFollowing = (req, res) => {
 }
 //route to display all posts "/api/posts/feed" 
 exports.allPosts = (req, res) => {
-    Post.find()
+    Post.find().
+    populate({
+        path: 'creator',
+        model: 'User'
+    })
     .then((data)=> {
         res.send(data)
     })
