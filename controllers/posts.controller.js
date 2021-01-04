@@ -113,6 +113,10 @@ exports.allPosts = (req, res) => {
 exports.onePost = (req, res) => {
     const id = req.params.idx
     Post.find({ _id: id })
+    .populate({
+        path: 'replies',
+        model: 'Post'
+    })
         .then((post) => {
             if (!post)
                 return res.status(400).send({ message: "Cannot find this post" })
