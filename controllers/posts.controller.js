@@ -81,7 +81,11 @@ exports.userFollowing = (req, res) => {
             path: 'followed',
             populate: {
                 path: 'posts',
-                model: 'Post'
+                model: 'Post',
+                populate: {
+                        path: 'creator',
+                        model: 'User'
+                    }
             }
         }).
         exec((error, posts) => {
