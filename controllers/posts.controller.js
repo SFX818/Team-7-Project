@@ -360,7 +360,11 @@ exports.replyToPost = (req, res) => {
             res.status(500).send({ message: err })
             return
         }
-        res.send("parent post has reply id in array")
+        res.send(post)
+    }).
+    populate({
+        path: 'creator',
+        model: 'User'
     })
     // Post.findById(req.body.parentPost, (err, post) => {
     //     if (err) {
