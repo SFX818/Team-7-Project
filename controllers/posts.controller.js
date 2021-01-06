@@ -83,9 +83,9 @@ exports.userFollowing = (req, res) => {
                 path: 'posts',
                 model: 'Post',
                 populate: {
-                        path: 'creator',
-                        model: 'User'
-                    }
+                    path: 'creator',
+                    model: 'User'
+                }
             }
         }).
         exec((error, posts) => {
@@ -117,10 +117,10 @@ exports.allPosts = (req, res) => {
 exports.onePost = (req, res) => {
     const id = req.params.idx
     Post.find({ _id: id })
-    .populate({
-        path: 'replies',
-        model: 'Post'
-    })
+        .populate({
+            path: 'replies',
+            model: 'Post'
+        })
         .then((post) => {
             if (!post)
                 return res.status(400).send({ message: "Cannot find this post" })
@@ -194,7 +194,7 @@ exports.retweetPost = async (req, res) => {
 
         })
     })
-    
+
     //Increment repost count on parent post by 1
     Post.findByIdAndUpdate(req.body.parentPost, { $inc: { reposts: 1 } }, (err, post) => {
         if (err) {
@@ -226,7 +226,7 @@ exports.unretweet = (req, res) => {
             console.log('Updated parent post')
             console.log(post)
         })
-        
+
     })
 
     //delete the post copy
@@ -273,17 +273,17 @@ exports.incrementFavorite = (req, res) => {
 
 //increase favorite count of favorited post by one and user's id to favoritedPosts array on Post
 exports.decreaseFavorite = (req, res) => {
-    Post.findByIdAndUpdate(req.body.id, {$inc: {favorites: -1}, $pull: {favoritedBy: req.body.userId}}, 
+    Post.findByIdAndUpdate(req.body.id, { $inc: { favorites: -1 }, $pull: { favoritedBy: req.body.userId } },
         (err, post) => {
-        if (err) {
-            res.status(500).send({ message: err })
-            return
-        } 
-        console.log(req.body)
-        //res.send("Favorite count decrease by one, user pulled from favoritedBy array")
-    })
+            if (err) {
+                res.status(500).send({ message: err })
+                return
+            }
+            console.log(req.body)
+            //res.send("Favorite count decrease by one, user pulled from favoritedBy array")
+        })
 
-    User.findByIdAndUpdate(req.body.userId, {$pull: {favoritePosts: req.body.id}},(err, post) => {
+    User.findByIdAndUpdate(req.body.userId, { $pull: { favoritePosts: req.body.id } }, (err, post) => {
         if (err) {
             res.status(500).send({ message: err })
             return
@@ -355,17 +355,20 @@ exports.replyToPost = (req, res) => {
     })
 
     // trying to find the parentPost (id) to attach to the reply to the parent post's replies array
-    Post.findByIdAndUpdate(req.body.parentPost, { $push: { replies: reply._id }},  (err, post) => {
+    Post.findByIdAndUpdate(req.body.parentPost, { $push: { replies: reply._id } }, (err, post) => {
         if (err) {
             res.status(500).send({ message: err })
             return
         }
         res.send(post)
     }).
-    populate({
-        path: 'creator',
-        model: 'User'
-    })
+        populate({
+            path: 'replies',
+            populate: {
+                path: 'creator',
+                model: 'User'
+            }
+        })
     // Post.findById(req.body.parentPost, (err, post) => {
     //     if (err) {
     //         res.status(500).send({ message: err })
