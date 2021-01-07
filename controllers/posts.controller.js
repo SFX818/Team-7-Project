@@ -119,7 +119,15 @@ exports.onePost = (req, res) => {
     Post.find({ _id: id })
         .populate({
             path: 'replies',
-            model: 'Post'
+            model: 'Post',
+            populate: {
+                path: 'creator',
+                model: 'User'
+            }
+        })
+        .populate({
+             path: 'creator',
+                model: 'User'
         })
         .then((post) => {
             if (!post)
