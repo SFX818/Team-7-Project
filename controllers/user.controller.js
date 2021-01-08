@@ -61,7 +61,11 @@ exports.userProfile = (req, res) => {
         path: 'posts',
         populate: {
             path: 'creator',
-            model: 'User'
+            model: 'User',
+            populate: {
+                path: 'profilePic',
+                model: 'Image'
+            }
         }
     }).
     populate('profilePic').

@@ -102,7 +102,11 @@ exports.allPosts = (req, res) => {
     Post.find().
         populate({
             path: 'creator',
-            model: 'User'
+            model: 'User',
+            populate: {
+                path: 'profilePic',
+                model: 'Image'
+            }
         })
         .then((data) => {
             res.send(data)
