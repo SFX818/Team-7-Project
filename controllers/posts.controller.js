@@ -84,7 +84,11 @@ exports.userFollowing = (req, res) => {
                 model: 'Post',
                 populate: {
                     path: 'creator',
-                    model: 'User'
+                    model: 'User',
+                    populate: {
+                        path: 'profilePic',
+                        model: 'Image'
+                    }
                 }
             }
         }).
@@ -126,12 +130,20 @@ exports.onePost = (req, res) => {
             model: 'Post',
             populate: {
                 path: 'creator',
-                model: 'User'
+                model: 'User',
+                populate: {
+                    path: 'profilePic',
+                    model: 'Image'
+                }
             }
         })
         .populate({
              path: 'creator',
-                model: 'User'
+                model: 'User',
+                populate: {
+                    path: 'profilePic',
+                    model: 'Image'
+                }
         })
         .then((post) => {
             if (!post)
@@ -313,7 +325,11 @@ exports.favoritesFeed = (req, res) => {
             path: 'favoritePosts',
             populate: {
                 path: 'creator',
-                model: 'User'
+                model: 'User',
+                populate: {
+                    path: 'profilePic',
+                    model: 'Image'
+                }
             }
         }).
         exec((error, posts) => {
@@ -340,7 +356,8 @@ exports.replyToPost = (req, res) => {
         hastags: req.body.hashtags,
         isRepost: false,
         isReply: true,
-        parentPost: req.body.parentPost
+        parentPost: req.body.parentPost,
+        profilePic: []
     })
 
     // Find the user and add user as creator to the reply
@@ -379,9 +396,15 @@ exports.replyToPost = (req, res) => {
             path: 'replies',
             populate: {
                 path: 'creator',
-                model: 'User'
+                model: 'User',
+                populate: {
+                    path: 'profilePic',
+                    model: 'Image'
+                }
             }
         })
+
+
     // Post.findById(req.body.parentPost, (err, post) => {
     //     if (err) {
     //         res.status(500).send({ message: err })
